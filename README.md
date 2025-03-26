@@ -1,4 +1,4 @@
-#Test Server for LISTEN
+# Test Server for LISTEN
 
 This is a jambonz application that helps to test different scenarios when using the LISTEN verb to send audio over a websocket connection.
 It is intended for debugging jambonz and should not be considered the best practice example of how to use LISTEN!
