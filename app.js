@@ -4,9 +4,9 @@ const app = express()
 const expressWs = require('express-ws')(app);
 app.use(express.json());
 
-const filePath = "crazyones.pcm"
+const filePath = "count-30.pcm"
 
-const port = 8000
+const port = 3000
 const splitSize = 5
 const echo = false;
 
@@ -18,7 +18,7 @@ app.post('/call', (req, res) => {
             "bidirectionalAudio" :{
                 "enabled" : true,
                 "streaming": true,
-                "sampleRate": 16000
+                "sampleRate": 8000
             }
         }]
   res.json(data)
@@ -113,18 +113,20 @@ async function markKill(filePath, conn){
     let chunkB = arrByte.slice(third, third*2) // next third bytes (10s)
     let chunkC = arrByte.slice(third*2) // last third bytes (10s)
     //setTimeout(mark, 1, 'chunkA-start', conn);
-    setTimeout(send, 1, chunkA, conn);
+    setTimeout(send, 1, chunkA, conn, false);
     //setTimeout(mark, 1, 'chunkA-end', conn);
-    setTimeout(killAudio, 5000, conn);
     //setTimeout(mark, 5100, 'chunkB-start', conn);
-    setTimeout(send, 5001, chunkB, conn);
+    setTimeout(send, 5000, chunkB, conn, true);
     //setTimeout(mark, 5100, 'chunkB-end', conn);
     //setTimeout(mark, 8000, 'chunkC-start', conn);
-    setTimeout(send, 8000, chunkC, conn);
+    setTimeout(send, 8000, chunkC, conn, false);
     //setTimeout(mark, 8000, 'chunkC-end', conn);
 }
 
-function send(data, conn){
+function send(data, conn, kill){
+    if (kill) {
+      conn.send(JSON.stringify({"type": "killAudio"}))
+    }
     conn.send(data)
 }
 
